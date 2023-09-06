@@ -1,0 +1,32 @@
+[
+  {
+    "map": "mirage",
+    "id": 1,
+    "name": "T Spawn",
+    "nameSC": "匪家",
+    "coord": {
+      "x": 100,
+      "y": 200
+    }
+  },
+  {
+    "map": "mirage",
+    "id": 2,
+    "name": "Connector",
+    "nameSC": "拱门",
+    "coord": {
+      "x": 320,
+      "y": 204
+    }
+  },
+  {
+    "map": "mirage",
+    "id": 3,
+    "name": "A Ramp",
+    "nameSC": "A1",
+    "coord": {
+      "x": 100,
+      "y": 200
+    }
+  }
+]
