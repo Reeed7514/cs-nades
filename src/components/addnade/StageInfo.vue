@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col items-center ">
     <div
-    @click="handleClick"
     :class="props.active ? 'bg-blue-300' : props.finished ? 'bg-green-300' : 'bg-gray-200'"
       class="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer">
       <Icon v-if="!props.active && props.finished" :size="24" color="#fff">
@@ -26,11 +25,11 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const {setActive} = useProgressStore()
+// const {setActive} = useProgressStore()
 
-function handleClick(){
-  if(props.finished){
-    setActive(props.stageNumber)
-  }
-}
+// function handleClick(){
+//   if(props.finished){
+//     setActive(props.stageNumber)
+//   }
+// }
 </script>

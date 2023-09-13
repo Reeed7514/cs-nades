@@ -11,6 +11,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "async-validator": "^4.2.5",
     "konva": "^9.2.0",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
@@ -21,7 +22,10 @@
     "@rushstack/eslint-patch": "^1.3.2",
     "@tsconfig/node18": "^18.2.0",
     "@types/node": "^18.17.5",
+    "@vicons/carbon": "^0.12.0",
+    "@vicons/fa": "^0.12.0",
     "@vicons/fluent": "^0.12.0",
+    "@vicons/ionicons5": "^0.12.0",
     "@vicons/utils": "^0.1.4",
     "@vitejs/plugin-vue": "^4.3.1",
     "@vue/eslint-config-typescript": "^11.0.3",
