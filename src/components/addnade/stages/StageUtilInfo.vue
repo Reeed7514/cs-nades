@@ -78,23 +78,32 @@
 				<option selected>左键</option>
 				<option>左键跳投</option>
 				<option>右键</option>
+				<option>右键跳投</option>
 				<option>左右键组合</option>
+				<option>左右键组合跳投</option>
 			</select>
 		</div>
 
 		<div class="mt-2 mb-4">
-			<p class="mb-1">传送位置指令</p>
+			<div class="flex gap-2 items-center mb-1">
+				<p>传送位置指令</p>
+				<span class="text-sm text-red-400">{{ validateErrors.spcmd }}</span>
+			</div>
 
-			<input type="text" v-model="formData.spcmd" class="p-1 border border-slate-200 rounded-md outline-none">
+			<input type="text" v-model="formData.spcmd" @input="validateErrors.spcmd = ''" class="w-full p-1 border border-slate-200 rounded-md outline-none">
 		</div>
 
 
 		<!-- 描述 -->
 		<div class="border-t border-slate-200">
 			<div class="mt-2 mb-4">
-				<p class="mb-1">描述</p>
 
-				<textarea v-model="formData.description"
+				<div class="flex gap-2 items-center mb-1">
+					<p>描述</p>
+					<span class="text-sm text-red-400">{{ validateErrors.description }}</span>
+				</div>
+
+				<textarea v-model="formData.description" @input="validateErrors.description = ''"
 					class="w-full outline-none border border-slate-200 rounded-md p-1 h-32"></textarea>
 			</div>
 		</div>
@@ -116,6 +125,9 @@ import { useProgressStore } from '@/stores/progress'
 import { ref, reactive } from 'vue'
 import Schema from 'async-validator'
 import type { Rules, ValidateError, Values } from 'async-validator'
+
+// https://www.youtube.com/watch?v=NxmCzkQBXrc
+// setpos 8415.820313 -5248.870117 320.000000;setang -70.642090 71.564941 0.000000
 
 const { setActive, setFinished } = useProgressStore()
 

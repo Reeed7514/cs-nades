@@ -75,7 +75,7 @@ async function handleGoNext() {
 }
 
 function handleErrors(errors: ValidateError[], fields: Values) {
-	console.log(errors);
+	// console.log(errors);
 	
 	if ('videoUrl' in fields) {
 		urlError.value = fields.videoUrl[0].message
