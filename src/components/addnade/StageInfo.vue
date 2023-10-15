@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center ">
     <div
     :class="props.active ? 'bg-blue-300' : props.finished ? 'bg-green-300' : 'bg-gray-200'"
-      class="flex items-center justify-center w-8 h-8 rounded-full cursor-pointer">
+      class="flex items-center justify-center w-8 h-8 rounded-full">
       <Icon v-if="!props.active && props.finished" :size="24" color="#fff">
         <Checkmark12Filled />
       </Icon>

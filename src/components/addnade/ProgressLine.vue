@@ -8,9 +8,7 @@
     <StageInfo :active="activeStageNumber === 3" :finished="getFinished(3)" :stage-number="3"
       stage-name="位置" />
     <StageInfo :active="activeStageNumber === 4" :finished="getFinished(4)" :stage-number="4"
-      stage-name="效果图" />
-    <StageInfo :active="activeStageNumber === 5" :finished="getFinished(5)" :stage-number="5"
-      stage-name="瞄点图" />
+      stage-name="上传图片" />
 
 
   </div>

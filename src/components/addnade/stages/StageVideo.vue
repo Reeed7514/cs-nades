@@ -9,7 +9,7 @@
 					<p>视频链接</p>
 					<span class="text-sm text-red-400">{{ urlError }}</span>
 				</div>
-				<input type="text" v-model="url" @input="urlError = ''" class="border border-slate-200 w-96 h-10 outline-none px-2 rounded-md">
+				<input type="text" v-model="url" :class="urlError ? 'animate-wiggle ring-2 ring-red-400' : ''" class="border border-slate-200 w-96 h-10 outline-none px-2 rounded-md">
 			</div>
 
 
@@ -80,6 +80,7 @@ function handleErrors(errors: ValidateError[], fields: Values) {
 	if ('videoUrl' in fields) {
 		urlError.value = fields.videoUrl[0].message
 
+		setTimeout(() => urlError.value = '', 2000)
 		// console.log(fields.videoUrl.message)
 	}
 	validating.value = false

@@ -180,10 +180,10 @@ async function handleGoNext() {
 	const validator = new Schema(descriptor)
 
 	try {
-		await validator.validate({
-			spcmd: formData.spcmd,
-			description: formData.description
-		})
+		// await validator.validate({
+		// 	spcmd: formData.spcmd,
+		// 	description: formData.description
+		// })
 
 		validating.value = false
 		setFinished(2)
