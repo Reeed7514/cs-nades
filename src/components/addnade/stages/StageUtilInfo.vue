@@ -188,7 +188,7 @@ async function handleGoNext() {
 		validating.value = false
 		setFinished(2)
 		setActive(3)
-
+		
 	} catch ({ errors, fields }: any) {
 		handleErrors(errors, fields)
 	}

@@ -4,7 +4,11 @@ export const useProgressStore = defineStore('progress', {
   state: () => {
     return {
       activeStageNumber: 1,
-      finishedMap: Object.fromEntries([1,2,3,4,5].map(n => [n, false]))
+      finishedMap: Object.fromEntries([1,2,3,4,5].map(n => [n, false])),
+			nadeData: {
+				video: null,
+
+			}
     }
   },
   getters: {
@@ -23,6 +27,18 @@ export const useProgressStore = defineStore('progress', {
     },
     setFinished(stage: number){
       this.finishedMap[stage] = true
-    }
+    },
+		commitStageVideo(data: any){
+			this.nadeData.video = data
+		},
+		commitStageUtilInfo(data: any){
+			
+		},
+		commitStageLocations(data: any){
+
+		},
+		commitStagePic(data: any){
+
+		}
   }
 })
