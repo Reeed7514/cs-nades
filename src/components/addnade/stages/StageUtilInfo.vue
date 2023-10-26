@@ -1,6 +1,22 @@
 <template>
 	<div class="w-2/5 p-6 border border-slate-200 rounded-md">
-		<p class="text-xl font-medium w-full border-b border-slate-100 pb-4">道具信息</p>
+		<!-- <p class="text-xl font-medium w-full border-b border-slate-100 pb-4">道具信息</p> -->
+		<div class="flex justify-between border-b border-slate-100 pb-2">
+			<p class="text-xl font-medium">道具信息</p>
+
+			<div class="flex gap-4">
+				<div @click="handleGoPrev" class="flex items-center rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer">
+					<Icon :size="30" color="#cdd0d1">
+						<AngleLeft />
+					</Icon>
+				</div>
+				<div @click="handleGoNext" class="flex items-center rounded-md mr-2 bg-gray-100 hover:bg-gray-200 cursor-pointer">
+					<Icon :size="30" color="#cdd0d1">
+						<AngleRight />
+					</Icon>
+				</div>
+			</div>
+		</div>
 		<!-- info -->
 
 		<div class="mt-2 mb-4">
@@ -108,17 +124,12 @@
 			</div>
 		</div>
 
-		<div class="mx-auto w-max mt-4">
-			<button @click="handleGoPrev" :disabled="validating"
-				class="border border-slate-200 rounded-md px-2 w-20 h-10 hover:bg-blue-200">上一个</button>
-			<button @click="handleGoNext" :disabled="validating"
-				class="border border-slate-200 rounded-md px-2 ml-4 w-20 h-10 hover:bg-blue-200">下一个</button>
-		</div>
+
 	</div>
 </template>
 
 <script setup lang="ts">
-import { Cloud, Fire, Bomb } from '@vicons/fa'
+import { Cloud, Fire, Bomb, AngleLeft, AngleRight } from '@vicons/fa'
 import { Flash } from '@vicons/ionicons5'
 import { Icon } from '@vicons/utils'
 import { useProgressStore } from '@/stores/progress'
@@ -129,7 +140,7 @@ import type { Rules, ValidateError, Values } from 'async-validator'
 // https://www.youtube.com/watch?v=NxmCzkQBXrc
 // setpos 8415.820313 -5248.870117 320.000000;setang -70.642090 71.564941 0.000000
 
-const { setActive, setFinished } = useProgressStore()
+const { setActive, setFinished, commitStageUtilInfo } = useProgressStore()
 
 const validating = ref(false)
 
@@ -186,6 +197,7 @@ async function handleGoNext() {
 		// })
 
 		validating.value = false
+		commitStageUtilInfo(formData)
 		setFinished(2)
 		setActive(3)
 		

@@ -1,6 +1,21 @@
 <template>
 	<div class="w-4/5 p-6 border border-slate-200 rounded-md">
-		<p class="text-xl font-medium w-full border-b border-slate-100 pb-4">位置信息</p>
+		<div class="flex justify-between border-b border-slate-100 pb-2">
+			<p class="text-xl font-medium">道具信息</p>
+
+			<div class="flex gap-4">
+				<div @click="handleGoPrev" class="flex items-center rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer">
+					<Icon :size="30" color="#cdd0d1">
+						<AngleLeft />
+					</Icon>
+				</div>
+				<div @click="handleGoNext" class="flex items-center rounded-md mr-2 bg-gray-100 hover:bg-gray-200 cursor-pointer">
+					<Icon :size="30" color="#cdd0d1">
+						<AngleRight />
+					</Icon>
+				</div>
+			</div>
+		</div>
 
 		<div class="mx-auto w-max flex gap-4 mt-2">
 			<button @click="boardType = 'start'"
@@ -32,24 +47,20 @@
 
 		</div>
 
-		<div class="mx-auto w-max mt-4">
-			<button @click="handleGoPrev" :disabled="validating"
-				class="border border-slate-200 rounded-md px-2 w-20 h-10 hover:bg-blue-200">上一个</button>
-			<button @click="handleGoNext" :disabled="validating"
-				class="border border-slate-200 rounded-md px-2 ml-4 w-20 h-10 hover:bg-blue-200">下一个</button>
-		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import MapBoard from './MapBoard.vue'
+import { Icon } from '@vicons/utils'
+import { AngleLeft, AngleRight } from '@vicons/fa';
 import type { StartArea, LandSpot } from '@/types'
 import Schema from 'async-validator'
 import { useProgressStore } from '@/stores/progress';
 import type { Rules, ValidateError, Values } from 'async-validator'
 
-const { setActive, setFinished } = useProgressStore()
+const { setActive, setFinished, commitStageLocations } = useProgressStore()
 
 
 const locationData = reactive<Record<string, string>>({
@@ -95,12 +106,16 @@ async function handleGoNext() {
 	const validator = new Schema(descriptor)
 
 	try {
-		await validator.validate({
+		const data = {
 			startAreaId: locationData.startAreaId,
 			landSpotId: locationData.landSpotId
-		})
+		}
+
+		await validator.validate(data)
 
 		validating.value = false
+
+		commitStageLocations(data)
 		setFinished(3)
 		setActive(4)
 

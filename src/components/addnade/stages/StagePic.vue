@@ -1,38 +1,59 @@
 <template>
 	<div class="w-4/5 p-6 border border-slate-200 rounded-md">
-		<p class="text-xl font-medium w-full border-b border-slate-100 pb-4">上传图片</p>
+		<div class="flex justify-between border-b border-slate-100 pb-2">
+			<p class="text-xl font-medium">上传图片</p>
 
+			<div class="flex gap-4">
+				<div @click="handleGoPrev" class="flex items-center rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer">
+					<Icon :size="30" color="#cdd0d1">
+						<AngleLeft />
+					</Icon>
+				</div>
+				<button @click="handleSubmit" class="px-2 rounded-md bg-green-100 hover:bg-green-200 cursor-pointer">
+					提交
+				</button>
+			</div>
+		</div>
 
-		<div class="space-y-6 mt-4">
-			<div>
-				<button @click="lineupImageInput.click()" :class="hasError.lineup ? 'animate-wiggle ring-2 ring-red-400' : ''"
-					class="px-2 py-1 rounded-lg hover:bg-gray-200 ring-1 ring-slate-200">瞄点图</button>
+		<div class="flex flex-col items-center gap-4 mt-4">
+			<div class="relative rounded-lg ring-2 "
+				:class="hasError.lineup ? 'animate-wiggle ring-red-300' : 'ring-slate-300'">
+				<div @click="lineupImageInput.click()"
+					:class="lineupImageUrl ? 'top-2 right-2' : 'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'"
+					class="w-max absolute flex flex-col items-center ring-1 ring-slate-200 rounded-md bg-white hover:bg-gray-200 px-1 py-1 cursor-pointer">
+					<Icon :size="lineupImageUrl ? 30 : 40" color="#cdd0d1">
+						<FileUpload />
+					</Icon>
+
+					<p v-if="!lineupImageUrl">瞄点图</p>
+				</div>
 
 				<input @change="(e) => handleImageChange(e, 'lineup')" type="file" hidden ref="lineupImageInput"
 					accept="image/jpg, image/jpeg, image/png, image/webp">
 
-				<img v-if="lineupImageUrl" :src="lineupImageUrl" class="mt-2 rounded-lg ring-2 ring-slate-300">
+				<img v-if="lineupImageUrl" :src="lineupImageUrl" class="rounded-lg">
+				<div v-else class="w-[300px] h-[200px] rounded-lg bg-gray-100"></div>
 			</div>
 
+			<div class="relative rounded-lg ring-2 "
+				:class="hasError.result ? 'animate-wiggle ring-red-300' : 'ring-slate-300'">
+				<div @click="resultImageInput.click()"
+					:class="resultImageUrl ? 'top-2 right-2' : 'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'"
+					class="w-max absolute flex flex-col items-center ring-1 ring-slate-200 rounded-md bg-white hover:bg-gray-200 px-1 py-1 cursor-pointer">
+					<Icon :size="resultImageUrl ? 30 : 40" color="#cdd0d1">
+						<FileUpload />
+					</Icon>
 
-			<div>
-				<button @click="resultImageInput.click()" :class="hasError.result ? 'animate-wiggle ring-2 ring-red-400' : ''"
-					class="px-2 py-1 rounded-lg hover:bg-gray-200 ring-1 ring-slate-200">效果图</button>
+					<p v-if="!resultImageUrl">效果图</p>
+				</div>
 
 				<input @change="(e) => handleImageChange(e, 'result')" type="file" hidden ref="resultImageInput"
 					accept="image/jpg, image/jpeg, image/png, image/webp">
 
-				<img v-if="resultImageUrl" :src="resultImageUrl" class="mt-2 rounded-lg ring-2 ring-slate-300">
+				<img v-if="resultImageUrl" :src="resultImageUrl" class="rounded-lg">
+				<div v-else class="w-[300px] h-[200px] rounded-lg bg-gray-100"></div>
 			</div>
-		</div>
 
-
-
-		<div class="mx-auto w-max mt-4">
-			<button @click="handleGoPrev" :disabled="validating"
-				class="border border-slate-200 rounded-md px-2 w-20 h-10 hover:bg-blue-200">上一个</button>
-			<button @click="handleSubmit" :disabled="validating"
-				class="border border-slate-200 rounded-md px-2 ml-4 w-20 h-10 hover:bg-blue-200">提交</button>
 		</div>
 	</div>
 </template>
@@ -40,8 +61,10 @@
 <script lang="ts" setup>
 import { ref, computed, reactive } from 'vue'
 import { useProgressStore } from '@/stores/progress'
+import { Icon } from '@vicons/utils'
+import { AngleLeft, FileUpload } from '@vicons/fa'
 
-const { setActive, setFinished } = useProgressStore()
+const { setActive, setFinished, commitStagePic } = useProgressStore()
 
 const validating = ref(false)
 
@@ -50,8 +73,10 @@ const hasError = reactive({
 	result: false
 })
 
+let lineupImage: Blob
 const lineupImageInput = ref()
 const lineupImageUrl = ref('')
+let resultImage: Blob
 const resultImageInput = ref()
 const resultImageUrl = ref('')
 
@@ -69,8 +94,10 @@ function handleImageChange(e: Event, type: string) {
 		let url = e.target?.result as string
 
 		if (type === 'lineup') {
+			lineupImage = file
 			lineupImageUrl.value = url
 		} else if (type === 'result') {
+			resultImage = file
 			resultImageUrl.value = url
 		}
 	}
@@ -91,11 +118,9 @@ function handleSubmit() {
 	}
 	setTimeout(() => resetErrors(), 2000)
 
-	if(lineupImageUrl.value && resultImageUrl.value){
-
+	if (lineupImageUrl.value && resultImageUrl.value) {
+		commitStagePic({ lineupImage, resultImage })
 	}
-
-
 }
 
 function resetErrors() {
