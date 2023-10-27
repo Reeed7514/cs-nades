@@ -47,13 +47,14 @@
 
 <script setup lang="ts">
 import { useProgressStore } from '@/stores/progress';
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { AngleRight, FileUpload } from '@vicons/fa'
 import { Icon } from '@vicons/utils'
 
 const videoInput = ref()
 const videoUrl = ref('')
 
+let resetTimer :number
 const hasError = ref(false)
 const { setFinished, setActive, commitStageVideo } = useProgressStore()
 
@@ -78,7 +79,7 @@ async function handleGoNext() {
 	if (!videoUrl.value) {
 		hasError.value = true
 
-		setTimeout(() => hasError.value = false, 2000)
+		resetTimer = setTimeout(() => hasError.value = false, 2000)
 	} else {
 		setFinished(1)
 		setActive(2)
@@ -86,4 +87,7 @@ async function handleGoNext() {
 
 }
 
+onUnmounted(() => {
+	clearTimeout(resetTimer)
+})
 </script>

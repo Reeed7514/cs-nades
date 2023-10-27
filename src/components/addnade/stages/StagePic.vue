@@ -59,19 +59,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive } from 'vue'
+import { ref, onUnmounted, reactive } from 'vue'
 import { useProgressStore } from '@/stores/progress'
 import { Icon } from '@vicons/utils'
 import { AngleLeft, FileUpload } from '@vicons/fa'
 
-const { setActive, setFinished, commitStagePic } = useProgressStore()
-
-const validating = ref(false)
+const { setActive, setFinished, commitStagePic,submitNade } = useProgressStore()
 
 const hasError = reactive({
 	lineup: false,
 	result: false
 })
+
+let resetTimer: number
 
 let lineupImage: Blob
 const lineupImageInput = ref()
@@ -107,7 +107,7 @@ async function handleGoPrev() {
 	setActive(3)
 }
 
-function handleSubmit() {
+async function handleSubmit() {
 
 	if (!lineupImageUrl.value) {
 		hasError.lineup = true
@@ -116,10 +116,12 @@ function handleSubmit() {
 	if (!resultImageUrl.value) {
 		hasError.result = true
 	}
-	setTimeout(() => resetErrors(), 2000)
+	resetTimer = setTimeout(() => resetErrors(), 2000)
 
 	if (lineupImageUrl.value && resultImageUrl.value) {
+		setFinished(4)
 		commitStagePic({ lineupImage, resultImage })
+		await submitNade()
 	}
 }
 
@@ -127,4 +129,8 @@ function resetErrors() {
 	hasError.lineup = false
 	hasError.result = false
 }
+
+onUnmounted(() => {
+	clearTimeout(resetTimer)
+})
 </script>

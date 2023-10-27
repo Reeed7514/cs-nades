@@ -69,7 +69,9 @@ export const useProgressStore = defineStore('progress', {
 				formData.append(key, this.images[key])
 			}
 
-			console.log('form data', formData)
+			for(const entry of formData.entries()){
+				console.log(entry)
+			}
 
 			// const result = await axiosClient.post('/nade', {
 

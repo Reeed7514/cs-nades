@@ -18,9 +18,10 @@
 		</div>
 
 		<div class="mx-auto w-max flex gap-4 mt-2">
-			<button @click="boardType = 'start'"
+			<button @click="boardType = 'start'" :class="hasError.startArea ? 'animate-wiggle ring-1 ring-red-300' : ''"
 				class="border border-slate-200 p-1 rounded-md hover:bg-gray-200">选择起始位置</button>
-			<button @click="boardType = 'end'" class="border border-slate-200 p-1 rounded-md hover:bg-gray-200">选择落点</button>
+			<button @click="boardType = 'end'" :class="hasError.landSpot ? 'animate-wiggle ring-1 ring-red-300' : ''"
+				class="border border-slate-200 p-1 rounded-md hover:bg-gray-200">选择落点</button>
 		</div>
 
 		<div class="flex gap-3 my-2 mx-auto w-max">
@@ -31,11 +32,6 @@
 			<p>扔到</p>
 			<p v-if="locationData.endCallout" class="font-medium border-b border-slate-300">{{ locationData.endCallout }}</p>
 			<p v-else class="w-8 border-b border-slate-300"></p>
-		</div>
-
-
-		<div class="mx-auto mt-2 w-max">
-			<p class="text-red-400">{{ validateError }}</p>
 		</div>
 
 
@@ -51,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, onUnmounted } from 'vue';
 import MapBoard from './MapBoard.vue'
 import { Icon } from '@vicons/utils'
 import { AngleLeft, AngleRight } from '@vicons/fa';
@@ -72,8 +68,12 @@ const locationData = reactive<Record<string, string>>({
 
 const boardType = ref('start')
 
-const validating = ref(false)
-const validateError = ref('')
+const hasError = reactive({
+	startArea: false,
+	landSpot: false
+})
+
+let resetTimer: number
 
 function handleGoPrev() {
 	setActive(2)
@@ -101,7 +101,6 @@ const descriptor: Rules = {
 }
 
 async function handleGoNext() {
-	validating.value = true
 
 	const validator = new Schema(descriptor)
 
@@ -112,8 +111,6 @@ async function handleGoNext() {
 		}
 
 		await validator.validate(data)
-
-		validating.value = false
 
 		commitStageLocations(data)
 		setFinished(3)
@@ -126,19 +123,14 @@ async function handleGoNext() {
 
 function handleErrors(errors: ValidateError[], fields: Values) {
 	if ('startAreaId' in fields) {
-		validateError.value = fields.startAreaId[0].message;
-
-		// console.log(validateErrors.spcmd);
-
+		hasError.startArea = true
 	}
 
 	if ('landSpotId' in fields) {
-		validateError.value = fields.landSpotId[0].message
-
-		// console.log(validateErrors.description)
+		hasError.landSpot = true
 	}
 
-	validating.value = false
+	resetTimer = setTimeout(() => resetErrors(), 2000)
 }
 
 function handleStartAreaChange(startArea: StartArea) {
@@ -152,4 +144,13 @@ function handleLandSpotChange(landSpot: LandSpot) {
 	locationData.endCallout = landSpot.calloutName
 }
 
+
+function resetErrors() {
+	hasError.startArea = false
+	hasError.landSpot = false
+}
+
+onUnmounted(() => {
+	clearTimeout(resetTimer)
+})
 </script>

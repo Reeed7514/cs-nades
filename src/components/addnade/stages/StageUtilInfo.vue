@@ -106,7 +106,9 @@
 				<span class="text-sm text-red-400">{{ validateErrors.spcmd }}</span>
 			</div>
 
-			<input type="text" v-model="formData.spcmd" @input="validateErrors.spcmd = ''" class="w-full p-1 border border-slate-200 rounded-md outline-none">
+			<input type="text" v-model="formData.spcmd" @input="validateErrors.spcmd = ''"
+				:class="hasError.spcmd ? 'animate-wiggle ring-1 ring-red-300' : ''"
+				class="w-full p-1 border border-slate-200 rounded-md outline-none">
 		</div>
 
 
@@ -120,7 +122,8 @@
 				</div>
 
 				<textarea v-model="formData.description" @input="validateErrors.description = ''"
-					class="w-full outline-none border border-slate-200 rounded-md p-1 h-32"></textarea>
+					:class="hasError.description ? 'animate-wiggle ring-1 ring-red-300' : ''"
+					class="w-full outline-none resize-none border border-slate-200 rounded-md p-1 h-32"></textarea>
 			</div>
 		</div>
 
@@ -133,7 +136,7 @@ import { Cloud, Fire, Bomb, AngleLeft, AngleRight } from '@vicons/fa'
 import { Flash } from '@vicons/ionicons5'
 import { Icon } from '@vicons/utils'
 import { useProgressStore } from '@/stores/progress'
-import { ref, reactive } from 'vue'
+import { reactive, onUnmounted } from 'vue'
 import Schema from 'async-validator'
 import type { Rules, ValidateError, Values } from 'async-validator'
 
@@ -142,7 +145,6 @@ import type { Rules, ValidateError, Values } from 'async-validator'
 
 const { setActive, setFinished, commitStageUtilInfo } = useProgressStore()
 
-const validating = ref(false)
 
 const formData = reactive<Record<string, string>>({
 	map: '荒漠迷城',
@@ -158,6 +160,13 @@ const validateErrors = reactive<Record<string, string>>({
 	spcmd: '',
 	description: ''
 })
+
+const hasError = reactive({
+	spcmd: false,
+	description: false
+})
+
+let resetTimer: number
 
 const descriptor: Rules = {
 	spcmd: {
@@ -186,7 +195,6 @@ function handleGoPrev() {
 }
 
 async function handleGoNext() {
-	validating.value = true
 
 	const validator = new Schema(descriptor)
 
@@ -196,11 +204,10 @@ async function handleGoNext() {
 		// 	description: formData.description
 		// })
 
-		validating.value = false
 		commitStageUtilInfo(formData)
 		setFinished(2)
 		setActive(3)
-		
+
 	} catch ({ errors, fields }: any) {
 		handleErrors(errors, fields)
 	}
@@ -209,18 +216,28 @@ async function handleGoNext() {
 function handleErrors(errors: ValidateError[], fields: Values) {
 	if ('spcmd' in fields) {
 		validateErrors.spcmd = fields.spcmd[0].message;
-
+		hasError.spcmd = true
 		// console.log(validateErrors.spcmd);
 
 	}
 
 	if ('description' in fields) {
 		validateErrors.description = fields.description[0].message
-
+		hasError.description = true
 		// console.log(validateErrors.description)
-
 	}
 
-	validating.value = false
+	resetTimer = setTimeout(() => resetErrors(), 2000)
 }
+
+function resetErrors() {
+	validateErrors.spcmd = ''
+	validateErrors.description = ''
+	hasError.spcmd = false
+	hasError.description = false
+}
+
+onUnmounted(() => {
+	clearTimeout(resetTimer)
+})
 </script>
