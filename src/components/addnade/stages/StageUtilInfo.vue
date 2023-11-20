@@ -136,12 +136,11 @@ import { Cloud, Fire, Bomb, AngleLeft, AngleRight } from '@vicons/fa'
 import { Flash } from '@vicons/ionicons5'
 import { Icon } from '@vicons/utils'
 import { useProgressStore } from '@/stores/progress'
-import { reactive, onUnmounted } from 'vue'
+import { reactive, onUnmounted, ref } from 'vue'
 import Schema from 'async-validator'
 import type { Rules, ValidateError, Values } from 'async-validator'
 
-// https://www.youtube.com/watch?v=NxmCzkQBXrc
-// setpos 8415.820313 -5248.870117 320.000000;setang -70.642090 71.564941 0.000000
+// 
 
 const { setActive, setFinished, commitStageUtilInfo } = useProgressStore()
 
@@ -152,8 +151,8 @@ const formData = reactive<Record<string, string>>({
 	team: 't',
 	movement: '静止',
 	throwType: '左键',
-	spcmd: '',
-	description: ''
+	spcmd: 'setpos 8415.820313 -5248.870117 320.000000;setang -70.642090 71.564941 0.000000',
+	description: 'xd'
 })
 
 const validateErrors = reactive<Record<string, string>>({

@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed flex items-center place-content-between w-full top-0 h-16 shadow-sm border border-b-slate-200 px-40">
+  <div class="fixed z-10 flex items-center place-content-between w-full top-0 h-16 shadow-sm bg-gray-50 border border-b-slate-200 px-40">
     <p class="font-blackops text-2xl">
       <RouterLink to="/">
         CS Nades
