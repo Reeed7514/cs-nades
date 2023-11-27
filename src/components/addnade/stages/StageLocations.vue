@@ -135,13 +135,13 @@ function handleErrors(errors: ValidateError[], fields: Values) {
 
 function handleStartAreaChange(startArea: StartArea) {
 	boardType.value = 'end'
-	locationData.startAreaId = startArea.id
-	locationData.startCallout = startArea.calloutName
+	locationData.startAreaId = startArea._id
+	locationData.startCallout = startArea.callout
 }
 
 function handleLandSpotChange(landSpot: LandSpot) {
-	locationData.landSpotId = landSpot.id
-	locationData.endCallout = landSpot.calloutName
+	locationData.landSpotId = landSpot._id
+	locationData.endCallout = landSpot.callout
 }
 
 

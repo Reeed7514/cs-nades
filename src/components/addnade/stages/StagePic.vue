@@ -58,14 +58,14 @@
 
 		<n-modal v-model:show="showModal">
 			<n-card style="width: 300px" :bordered="false" size="huge" role="dialog" aria-modal="true">
-				<div v-if="uploadState.pending" class="flex items-center gap-2">
+				<div v-if="createNadeState === 'pending'" class="flex items-center gap-2">
 					<p class="font-noto font-normal text-lg">
 						正在提交道具信息 . . .
 					</p>
 					<n-spin size="small" />
 				</div>
 
-				<div v-else-if="uploadState.success" class="flex items-center gap-2">
+				<div v-else-if="createNadeState === 'success'" class="flex items-center gap-2">
 					<Icon size="24" color="#68d48c">
 						<CheckCircleFilled />
 					</Icon>
@@ -89,13 +89,17 @@
 
 <script lang="ts" setup>
 import { ref, onUnmounted, reactive } from 'vue'
+import {useRouter} from 'vue-router'
 import { useProgressStore } from '@/stores/progress'
 import { Icon } from '@vicons/utils'
 import { AngleLeft, FileUpload } from '@vicons/fa'
 import { CheckCircleFilled, ErrorSharp } from '@vicons/material'
 import { NModal, NCard, NSpin } from 'naive-ui'
+import type { CreateNadeState } from '@/types'
 
 const { setActive, setFinished, commitStagePic, submitNade } = useProgressStore()
+
+const router = useRouter()
 
 const hasError = reactive({
 	lineup: false,
@@ -112,11 +116,7 @@ const resultImageInput = ref()
 const resultImageUrl = ref('')
 
 const showModal = ref(false)
-const uploadState = reactive({
-	pending: true,
-	success: false,
-	error: false
-})
+const createNadeState = ref<CreateNadeState>('pending')
 
 
 function handleImageChange(e: Event, type: string) {
@@ -147,21 +147,28 @@ async function handleGoPrev() {
 
 async function handleSubmit() {
 	showModal.value = true
-	// uploadState.pending = true
-	// if (!lineupImageUrl.value) {
-	// 	hasError.lineup = true
-	// }
+	createNadeState.value = 'pending'
+	if (!lineupImageUrl.value) {
+		hasError.lineup = true
+	}
 
-	// if (!resultImageUrl.value) {
-	// 	hasError.result = true
-	// }
-	// resetTimer = setTimeout(() => resetErrors(), 2000)
+	if (!resultImageUrl.value) {
+		hasError.result = true
+	}
+	resetTimer = setTimeout(() => resetErrors(), 2000)
 
-	// if (lineupImageUrl.value && resultImageUrl.value) {
-	// 	setFinished(4)
-	// 	commitStagePic({ lineupImage, resultImage })
-	// 	await submitNade()
-	// }
+	if (lineupImageUrl.value && resultImageUrl.value) {
+		setFinished(4)
+		commitStagePic({ lineupImage, resultImage })
+		try {
+			createNadeState.value = await submitNade()
+			if(createNadeState.value === 'success'){
+				router.push('/')
+			}
+		} catch (error) {
+			createNadeState.value = 'error'
+		}
+	}
 }
 
 function resetErrors() {

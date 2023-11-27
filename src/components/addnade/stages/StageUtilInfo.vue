@@ -23,12 +23,12 @@
 			<p class="mb-1">地图</p>
 
 			<select class="outline-none border border-slate-200 rounded-md py-1" v-model="formData.map">
-				<option selected>荒漠迷城</option>
-				<option>炼狱小镇</option>
-				<option>死亡游乐园</option>
-				<option>远古遗迹</option>
-				<option>核子危机</option>
-				<option>殒命大厦</option>
+				<option value="mirage" selected>荒漠迷城</option>
+				<option value="inferno">炼狱小镇</option>
+				<option value="overpass">死亡游乐园</option>
+				<option value="ancient">远古遗迹</option>
+				<option value="nuke">核子危机</option>
+				<option value="vertigo">殒命大厦</option>
 			</select>
 		</div>
 
@@ -140,13 +140,11 @@ import { reactive, onUnmounted, ref } from 'vue'
 import Schema from 'async-validator'
 import type { Rules, ValidateError, Values } from 'async-validator'
 
-// 
-
 const { setActive, setFinished, commitStageUtilInfo } = useProgressStore()
 
 
 const formData = reactive<Record<string, string>>({
-	map: '荒漠迷城',
+	map: 'mirage',
 	nadeType: 'smoke',
 	team: 't',
 	movement: '静止',
@@ -202,7 +200,6 @@ async function handleGoNext() {
 		// 	spcmd: formData.spcmd,
 		// 	description: formData.description
 		// })
-
 		commitStageUtilInfo(formData)
 		setFinished(2)
 		setActive(3)

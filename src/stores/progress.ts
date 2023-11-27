@@ -37,6 +37,16 @@ export const useProgressStore = defineStore("progress", {
     },
   },
   actions: {
+    resetProgress() {
+      this.activeStageNumber = 1
+      this.finishedMap = Object.fromEntries(
+        [1, 2, 3, 4, 5].map((n) => [n, false])
+      )
+      this.video = null
+      this.utilInfo = null
+      this.locations = null
+      this.images = null
+    },
     setActive(stage: number) {
       this.activeStageNumber = stage
     },
@@ -71,19 +81,23 @@ export const useProgressStore = defineStore("progress", {
         formData.append(key, this.images[key])
       }
 
-			formData.append('map', 'cbble')
+      formData.append("map", "cbble")
 
       // for (const entry of formData.entries()) {
       //   console.log(entry)
       // }
 
-			try {
-				const result = await axiosClient.post("/nade/create", formData)
-				console.log(result.data)
-				
-			} catch (error) {
-				console.log(error)
-			}
+      try {
+        const result = await axiosClient.post("/nade/create", formData)
+        if (result.data === "success") {
+          return "success"
+        } else {
+          return "error"
+        }
+      } catch (error) {
+        console.log(error)
+				return 'error'
+      }
     },
   },
 })

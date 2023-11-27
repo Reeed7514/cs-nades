@@ -1,8 +1,8 @@
 export interface DataStartArea {
-	id: string,
-	calloutName: string,
+	_id: string,
+	callout: string,
 	map: string,
-	position: { x: number, y: number }[]
+	coordinates: string
 }
 
 export interface ConfigStartArea {
@@ -17,10 +17,10 @@ export interface StartArea extends DataStartArea {
 }
 
 export interface DataLandSpot {
-	id: string,
-	calloutName: string,
+	_id: string,
+	callout: string,
 	map: string,
-	position: { x: number, y: number },
+	coordinates: string,
 	type: string
 }
 
@@ -35,3 +35,5 @@ export interface ConfigLandSpot {
 export interface LandSpot extends DataLandSpot {
 	config: ConfigLandSpot
 }
+
+export type CreateNadeState = 'pending' | 'success' | 'error'
